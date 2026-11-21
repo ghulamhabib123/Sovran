@@ -1,4 +1,4 @@
-# SOVRAN — Full-Stack 3D Fashion E-Commerce Storefront
+# SOVRAN, Full-Stack 3D Fashion E-Commerce Storefront
 
 Architectural luxury fashion and modern streetwear e-commerce platform built with React, TypeScript, Tailwind CSS, Three.js, Express.js, and **Firebase Firestore + Firebase Authentication**.
 
