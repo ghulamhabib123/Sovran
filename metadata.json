@@ -1,0 +1,6 @@
+{
+  "name": "SOVRAN",
+  "description": "SOVRAN — Architectural luxury and modern streetwear e-commerce storefront featuring interactive 3D presentation, men's and women's collections, and full-stack order management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,95 @@
+/**
+ * Verification tests for SOVRAN Firestore Security Rules (Dirty Dozen + Legitimate Flows).
+ * Intended for @firebase/rules-unit-testing against the Firestore Emulator when available.
+ */
+export const dirtyDozenCases = [
+  {
+    name: '1. Unverified admin email spoof rejected',
+    auth: { uid: 'spoof-uid', token: { email: 'gameoover1289@gmail.com', email_verified: false } },
+    operation: 'update',
+    path: 'products/prod-men-01',
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    name: '2. Self-admin escalation rejected',
+    auth: { uid: 'user-1', token: { email: 'user1@example.com', email_verified: true } },
+    operation: 'create',
+    path: 'admins/user-1',
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    name: '3. Cross-user PII read rejected',
+    auth: { uid: 'user-a', token: { email: 'a@example.com', email_verified: true } },
+    operation: 'get',
+    path: 'users/user-b/private/info',
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    name: '4. Blanket order list query rejected for non-admin',
+    auth: { uid: 'user-a', token: { email: 'a@example.com', email_verified: true } },
+    operation: 'list',
+    path: 'orders',
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    name: '5. Order ownership spoof rejected',
+    auth: { uid: 'user-a', token: { email: 'a@example.com', email_verified: true } },
+    operation: 'create',
+    path: 'orders/ord-1',
+    payload: { userId: 'user-b' },
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    name: '6. Fake paid order creation rejected',
+    auth: { uid: 'user-a', token: { email: 'a@example.com', email_verified: true } },
+    operation: 'create',
+    path: 'orders/ord-2',
+    payload: { userId: 'user-a', orderStatus: 'placed', payment: { method: 'card', status: 'paid' } },
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    name: '7. Shadow field injection on user profile rejected',
+    auth: { uid: 'user-a', token: { email: 'a@example.com', email_verified: true } },
+    operation: 'create',
+    path: 'users/user-a',
+    payload: { uid: 'user-a', displayName: 'A', isAdmin: true },
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    name: '8. Product price tampering by non-admin rejected',
+    auth: { uid: 'user-a', token: { email: 'a@example.com', email_verified: true } },
+    operation: 'update',
+    path: 'products/prod-men-01',
+    payload: { price: 1 },
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    name: '9. Oversized ID poisoning rejected',
+    auth: { uid: 'user-a', token: { email: 'a@example.com', email_verified: true } },
+    operation: 'create',
+    path: `orders/${'A'.repeat(200)}`,
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    name: '10. Client timestamp forgery on review rejected',
+    auth: { uid: 'user-a', token: { email: 'a@example.com', email_verified: true } },
+    operation: 'create',
+    path: 'products/prod-men-01/reviews/rev-1',
+    payload: { createdAt: '2020-01-01T00:00:00Z' },
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    name: '11. Coupon list enumeration by non-admin rejected',
+    auth: { uid: 'user-a', token: { email: 'a@example.com', email_verified: true } },
+    operation: 'list',
+    path: 'coupons',
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    name: '12. Newsletter list harvesting by non-admin rejected',
+    auth: { uid: 'user-a', token: { email: 'a@example.com', email_verified: true } },
+    operation: 'list',
+    path: 'newsletter',
+    expected: 'PERMISSION_DENIED',
+  },
+];

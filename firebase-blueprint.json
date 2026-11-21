@@ -1,0 +1,266 @@
+{
+  "entities": {
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Authorized store administrator record mapped by Firebase Auth UID.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "role": { "type": "string", "enum": ["admin", "superadmin"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "UserProfilePublic": {
+      "title": "UserProfilePublic",
+      "description": "Non-sensitive user profile metadata.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "photoUrl": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "createdAt", "updatedAt"]
+    },
+    "UserPrivateInfo": {
+      "title": "UserPrivateInfo",
+      "description": "Isolated PII document for authenticated user email and phone.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "updatedAt"]
+    },
+    "UserAddress": {
+      "title": "UserAddress",
+      "description": "Saved customer shipping address.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "label": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "fullName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "phone": { "type": "string", "minLength": 3, "maxLength": 40 },
+        "country": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "province": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "city": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "area": { "type": "string", "maxLength": 120 },
+        "streetAddress": { "type": "string", "minLength": 3, "maxLength": 250 },
+        "postalCode": { "type": "string", "maxLength": 20 },
+        "isDefault": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "label", "fullName", "phone", "country", "province", "city", "streetAddress", "isDefault", "createdAt"]
+    },
+    "CartItem": {
+      "title": "CartItem",
+      "description": "Authenticated user shopping bag line item.",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "variantId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "size": { "type": "string", "minLength": 1, "maxLength": 20 },
+        "colorName": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "colorHex": { "type": "string", "minLength": 4, "maxLength": 20 },
+        "quantity": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "variantId", "size", "colorName", "colorHex", "quantity", "updatedAt"]
+    },
+    "WishlistItem": {
+      "title": "WishlistItem",
+      "description": "Authenticated user saved wishlist product reference.",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "createdAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Apparel product with variants, pricing in PKR, and 3D silhouette metadata.",
+      "type": "object",
+      "properties": {
+        "slug": { "type": "string", "minLength": 2, "maxLength": 160, "pattern": "^[a-z0-9\\-]+$" },
+        "sku": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "name": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "fabricDetails": { "type": "string", "maxLength": 400 },
+        "careInstructions": { "type": "string", "maxLength": 400 },
+        "specifications": { "type": "array" },
+        "gender": { "type": "string", "enum": ["men", "women", "unisex"] },
+        "category": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "collectionSlug": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "price": { "type": "number" },
+        "salePrice": { "type": "number" },
+        "images": { "type": "array" },
+        "videoUrl": { "type": "string", "maxLength": 500 },
+        "silhouetteType": { "type": "string", "enum": ["tee", "hoodie", "shirt", "jacket", "trousers", "jeans", "dress", "coord"] },
+        "variants": { "type": "array" },
+        "status": { "type": "string", "enum": ["active", "draft", "archived"] },
+        "isFeatured": { "type": "boolean" },
+        "isNewArrival": { "type": "boolean" },
+        "isBestSeller": { "type": "boolean" },
+        "salesCount": { "type": "number" },
+        "ratingAvg": { "type": "number" },
+        "ratingCount": { "type": "number" },
+        "isDemo": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["slug", "sku", "name", "description", "gender", "category", "collectionSlug", "price", "images", "silhouetteType", "variants", "status", "isFeatured", "isNewArrival", "isBestSeller", "salesCount", "ratingAvg", "ratingCount", "isDemo", "createdAt", "updatedAt"]
+    },
+    "ProductReview": {
+      "title": "ProductReview",
+      "description": "Verified client product review.",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "rating": { "type": "number" },
+        "title": { "type": "string", "maxLength": 120 },
+        "comment": { "type": "string", "minLength": 5, "maxLength": 1500 },
+        "verifiedPurchase": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "userId", "authorName", "rating", "comment", "verifiedPurchase", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer purchase order with payment state, tracking, and line items.",
+      "type": "object",
+      "properties": {
+        "orderNumber": { "type": "string", "minLength": 5, "maxLength": 40, "pattern": "^[A-Z0-9\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "customer": { "type": "object" },
+        "shippingAddress": { "type": "object" },
+        "deliveryMethod": { "type": "object" },
+        "items": { "type": "array" },
+        "currency": { "type": "string", "enum": ["PKR"] },
+        "subtotal": { "type": "number" },
+        "discountCode": { "type": "string", "maxLength": 40 },
+        "discountAmount": { "type": "number" },
+        "shippingCost": { "type": "number" },
+        "taxAmount": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "payment": { "type": "object" },
+        "orderStatus": { "type": "string", "enum": ["placed", "confirmed", "processing", "packed", "shipped", "out_for_delivery", "delivered", "cancelled", "returned"] },
+        "tracking": { "type": "object" },
+        "statusHistory": { "type": "array" },
+        "stockRestored": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orderNumber", "userId", "customer", "shippingAddress", "deliveryMethod", "items", "currency", "subtotal", "discountAmount", "shippingCost", "taxAmount", "totalAmount", "payment", "orderStatus", "tracking", "statusHistory", "stockRestored", "createdAt", "updatedAt"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "description": "Discount coupon configuration.",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "minLength": 2, "maxLength": 40, "pattern": "^[A-Z0-9_\\-]+$" },
+        "type": { "type": "string", "enum": ["percentage", "fixed", "free_shipping"] },
+        "value": { "type": "number" },
+        "minOrderAmount": { "type": "number" },
+        "maxUses": { "type": "number" },
+        "usedCount": { "type": "number" },
+        "applicableCategories": { "type": "array" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["code", "type", "value", "minOrderAmount", "maxUses", "usedCount", "applicableCategories", "isActive", "createdAt"]
+    },
+    "NewsletterSubscriber": {
+      "title": "NewsletterSubscriber",
+      "description": "Private client list email subscriber.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "createdAt"]
+    },
+    "StoreSettings": {
+      "title": "StoreSettings",
+      "description": "Storefront configuration, shipping rates, payment instructions, and CMS text.",
+      "type": "object",
+      "properties": {
+        "brandName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "tagline": { "type": "string", "maxLength": 160 },
+        "currency": { "type": "string", "enum": ["PKR"] },
+        "contactEmail": { "type": "string", "maxLength": 200 },
+        "contactPhone": { "type": "string", "maxLength": 40 },
+        "studioAddress": { "type": "string", "maxLength": 250 },
+        "standardShippingFee": { "type": "number" },
+        "expressShippingFee": { "type": "number" },
+        "freeShippingThreshold": { "type": "number" },
+        "taxRatePercent": { "type": "number" },
+        "paymentMethods": { "type": "object" },
+        "bankDetails": { "type": "object" },
+        "mobileWallets": { "type": "object" },
+        "cms": { "type": "object" },
+        "socialLinks": { "type": "object" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["brandName", "tagline", "currency", "contactEmail", "contactPhone", "studioAddress", "standardShippingFee", "expressShippingFee", "freeShippingThreshold", "taxRatePercent", "paymentMethods", "bankDetails", "mobileWallets", "cms", "socialLinks", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/admins/{uid}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Administrator registry for RBAC verification."
+    },
+    "/users/{uid}": {
+      "schema": { "$ref": "#/entities/UserProfilePublic" },
+      "description": "Public profile shell for authenticated users."
+    },
+    "/users/{uid}/private/{docId}": {
+      "schema": { "$ref": "#/entities/UserPrivateInfo" },
+      "description": "PII-isolated private user contact record."
+    },
+    "/users/{uid}/addresses/{addressId}": {
+      "schema": { "$ref": "#/entities/UserAddress" },
+      "description": "Saved delivery addresses owned by the user."
+    },
+    "/users/{uid}/cart/{variantId}": {
+      "schema": { "$ref": "#/entities/CartItem" },
+      "description": "User shopping bag line items."
+    },
+    "/users/{uid}/wishlist/{productId}": {
+      "schema": { "$ref": "#/entities/WishlistItem" },
+      "description": "User saved wishlist items."
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Storefront apparel catalog."
+    },
+    "/products/{productId}/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/ProductReview" },
+      "description": "Customer product reviews."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer orders protected by ownership and admin RBAC."
+    },
+    "/coupons/{couponCode}": {
+      "schema": { "$ref": "#/entities/Coupon" },
+      "description": "Storefront discount coupons keyed by uppercase code."
+    },
+    "/newsletter/{subscriberId}": {
+      "schema": { "$ref": "#/entities/NewsletterSubscriber" },
+      "description": "Newsletter subscription records (write-only for guests, readable by admins)."
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/StoreSettings" },
+      "description": "Storefront CMS, shipping fees, and payment settings."
+    }
+  }
+}
